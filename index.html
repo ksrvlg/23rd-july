@@ -13,67 +13,94 @@
       color: #000;
       display: flex;
       flex-direction: column;
-      justify-content: center;
       align-items: center;
-      height: 100vh;
       text-align: center;
+    }
+    header {
+      width: 100%;
+      background: #f8f8f8;
+      padding: 20px 0;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    header img {
+      max-width: 200px;
+      height: auto;
+    }
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 40px 20px;
+      width: 100%;
+      max-width: 400px;
     }
     h1 {
       font-size: 24px;
       margin-bottom: 20px;
+      background: rgba(255,255,255,0.8);
+      padding: 10px 20px;
+      border-radius: 4px;
     }
     a.call-btn {
       display: inline-block;
       font-size: 20px;
-      color: white;
-      background-color: #28a745;
+      color: #fff;
+      background-color: #0070ba; /* PayPal blue */
       padding: 15px 30px;
       text-decoration: none;
       border-radius: 8px;
+      transition: background-color 0.3s;
     }
     a.call-btn:hover {
-      background-color: #218838;
+      background-color: #005c99;
     }
     p {
       margin-top: 30px;
       font-size: 14px;
-      color: #666;
+      color: #333;
+      background: rgba(255,255,255,0.8);
+      padding: 5px 10px;
+      border-radius: 4px;
     }
   </style>
 </head>
 <body>
 
-  <h1>Click to Call Customer Support</h1>
-  <a href="tel:+18082165424" class="call-btn">Call Now: +1-808-216- 5424</a>
-  <p>Available 24/7</p>
+  <header>
+    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSZQZvv8aJqvrWwrurrR04b1Il-GxMZOe9QjQ&s" alt="PayPal Logo">
+  </header>
 
-  <!-- Default Statcounter code for micro
-https://micro-softs-helpdesks.vercel.app/ -->
-<script type="text/javascript">
-  var sc_project=13141255; 
-  var sc_invisible=1; 
-  var sc_security="c6f9d922"; 
-</script>
-<script type="text/javascript"
-  src="https://www.statcounter.com/counter/counter.js"
-  async></script>
-<noscript><div class="statcounter"><a title="Web Analytics"
-  href="https://statcounter.com/" target="_blank"><img
-  class="statcounter"
-  src="https://c.statcounter.com/13141255/0/c6f9d922/1/"
-  alt="Web Analytics"
-  referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
-<!-- End of Statcounter Code -->
+  <main>
+    <h1>Click to Call Customer Support</h1>
+    <a href="tel:+18037624570" class="call-btn">Call Now: +1‑803‑762‑4570</a>
+    <p>Available 24/7</p>
+  </main>
 
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-VCBLXTQNVQ"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+  <!-- Default Statcounter code -->
+  <script type="text/javascript">
+    var sc_project=13141255; 
+    var sc_invisible=1; 
+    var sc_security="c6f9d922"; 
+  </script>
+  <script type="text/javascript"
+    src="https://www.statcounter.com/counter/counter.js"
+    async></script>
+  <noscript><div class="statcounter"><a title="Web Analytics"
+    href="https://statcounter.com/" target="_blank"><img
+    class="statcounter"
+    src="https://c.statcounter.com/13141255/0/c6f9d922/1/"
+    alt="Web Analytics"
+    referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
 
-  gtag('config', 'G-VCBLXTQNVQ');
-</script>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VCBLXTQNVQ"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-VCBLXTQNVQ');
+  </script>
 
 </body>
 </html>
