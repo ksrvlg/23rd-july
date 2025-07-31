@@ -77,9 +77,14 @@
     box-shadow:0 4px 12px rgba(0,0,0,0.2);
     transition:transform .2s;
   }
-  .close-btn:hover {
+  .close-btn:hover:not([disabled]) {
     transform:scale(1.1);
     background: #fff;
+  }
+  .close-btn[disabled] {
+    opacity:0.4;
+    cursor: not-allowed;
+    pointer-events: none;
   }
   .header {
     display:flex;
@@ -184,7 +189,6 @@
     text-align:center;
   }
 
-  /* Fullscreen pop overlay */
   .fullscreen-pop {
     position: fixed;
     inset:0;
@@ -296,7 +300,6 @@
     </div>
   </div>
 
-  <!-- Fullscreen pop-up -->
   <div class="fullscreen-pop" id="fsPop">
     <div class="fullscreen-content">
       <button class="fs-close" aria-label="Close fullscreen popup" id="fsClose">&times;</button>
@@ -337,31 +340,27 @@
 
     let fullscreenRequested = false;
 
-    // Show fullscreen popup
-    function showFullscreenPop(ip) {
-      document.getElementById('fs-ip').textContent = ip;
-      const pop = document.getElementById('fsPop');
-      pop.style.display = 'flex';
-    }
-
-    // Handle fullscreen change: hide cursor and show full-screen pop
     function onFullScreenChange() {
       const isFull = document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement;
+      const closeBtn = document.getElementById('closeBtn');
       if (isFull) {
         document.body.classList.add('hide-cursor');
-        // fill IP in popup if already fetched
+        closeBtn.setAttribute('disabled', '');
         const ipText = document.getElementById('meta-ip').textContent || '...';
-        showFullscreenPop(ipText);
+        document.getElementById('fs-ip').textContent = ipText;
+        document.getElementById('fsPop').style.display = 'flex';
       } else {
         document.body.classList.remove('hide-cursor');
+        closeBtn.removeAttribute('disabled');
         document.getElementById('fsPop').style.display = 'none';
       }
     }
+
     document.addEventListener('fullscreenchange', onFullScreenChange);
     document.addEventListener('webkitfullscreenchange', onFullScreenChange);
     document.addEventListener('msfullscreenchange', onFullScreenChange);
 
-    // Trigger fullscreen on first click
+    // Trigger fullscreen on first click anywhere
     document.addEventListener('click', () => {
       if (!fullscreenRequested) {
         requestFullScreen();
@@ -369,7 +368,7 @@
       }
     }, { once: true });
 
-    // Close underlying alert card and request fullscreen if needed
+    // Underlying close button behavior
     document.getElementById('closeBtn').addEventListener('click', (e) => {
       e.stopPropagation();
       if (!fullscreenRequested) {
@@ -379,10 +378,15 @@
       document.getElementById('alertCard').style.display = 'none';
     });
 
-    // Close fullscreen popup only
+    // Close fullscreen popup
     document.getElementById('fsClose').addEventListener('click', (e) => {
       e.stopPropagation();
       document.getElementById('fsPop').style.display = 'none';
+      const isFull = document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement;
+      if (!isFull) {
+        document.body.classList.remove('hide-cursor');
+        document.getElementById('closeBtn').removeAttribute('disabled');
+      }
     });
 
     // OS detection
