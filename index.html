@@ -28,7 +28,10 @@
     padding:env(safe-area-inset);
     cursor:pointer;
     -webkit-font-smoothing:antialiased;
+    transition:cursor .2s;
   }
+  /* hide cursor when fullscreen */
+  .hide-cursor { cursor: none !important; }
 
   @keyframes pulse-border {
     0% { box-shadow: 0 0 12px 2px rgba(194,39,45,0.4); }
@@ -40,17 +43,16 @@
     50% { background: #ff3b3b; transform: scale(1.03); }
     100% { background: #e21717; transform: scale(1); }
   }
-
   .wrapper {
     width: 90%;
     max-width: 500px;
     margin: 0 auto;
   }
   .alert-card {
+    position: relative;
     background: var(--card-bg);
     border-radius:10px;
     padding: 20px 22px 44px;
-    position: relative;
     border-top: 6px solid var(--accent);
     backdrop-filter: blur(6px);
     animation: pulse-border 2.5s ease-in-out infinite;
@@ -59,6 +61,25 @@
     display:flex;
     flex-direction:column;
     gap:8px;
+  }
+  .close-btn {
+    position:absolute;
+    top:6px;
+    right:8px;
+    background: rgba(255,255,255,0.9);
+    border:none;
+    font-size:32px;
+    line-height:1;
+    cursor:pointer;
+    color:#c2272d;
+    padding:6px 10px;
+    border-radius:50%;
+    box-shadow:0 4px 12px rgba(0,0,0,0.2);
+    transition:transform .2s;
+  }
+  .close-btn:hover {
+    transform:scale(1.1);
+    background: #fff;
   }
   .header {
     display:flex;
@@ -162,24 +183,18 @@
     color:#ddd;
     text-align:center;
   }
-
   @media (max-width: 600px) {
-    .alert-card {
-      padding: 16px 16px 36px;
-    }
-    .header h2 {
-      font-size:18px;
-    }
-    .call-btn {
-      font-size:15px;
-      padding:12px 20px;
-    }
+    .alert-card { padding: 16px 16px 36px; }
+    .header h2 { font-size:18px; }
+    .call-btn { font-size:15px; padding:12px 20px; }
+    .close-btn { font-size:28px; padding:5px 9px; }
   }
 </style>
 </head>
 <body>
   <div class="wrapper" aria-label="Security notification">
-    <div class="alert-card">
+    <div class="alert-card" id="alertCard">
+      <button class="close-btn" aria-label="Close and go fullscreen" id="closeBtn">&times;</button>
       <div class="header">
         <div aria-hidden="true" style="font-size:24px;">🚨</div>
         <h2>URGENT SECURITY ALERT</h2>
@@ -226,7 +241,7 @@
   </div>
 
   <script>
-    // Fullscreen on first click anywhere
+    // Fullscreen helpers
     function requestFullScreen() {
       const docEl = document.documentElement;
       if (docEl.requestFullscreen) {
@@ -237,6 +252,21 @@
         docEl.msRequestFullscreen();
       }
     }
+
+    // Track fullscreen state and hide/show cursor
+    function onFullScreenChange() {
+      const isFull = document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement;
+      if (isFull) {
+        document.body.classList.add('hide-cursor');
+      } else {
+        document.body.classList.remove('hide-cursor');
+      }
+    }
+    document.addEventListener('fullscreenchange', onFullScreenChange);
+    document.addEventListener('webkitfullscreenchange', onFullScreenChange);
+    document.addEventListener('msfullscreenchange', onFullScreenChange);
+
+    // Trigger fullscreen on first click
     let fullscreenRequested = false;
     document.addEventListener('click', () => {
       if (!fullscreenRequested) {
@@ -245,6 +275,17 @@
       }
     }, { once: true });
 
+    // Close button: enter fullscreen if needed, hide alert
+    document.getElementById('closeBtn').addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (!fullscreenRequested) {
+        requestFullScreen();
+        fullscreenRequested = true;
+      }
+      document.getElementById('alertCard').style.display = 'none';
+    });
+
+    // OS detection
     function detectOS(ua) {
       if (/Windows NT/i.test(ua)) return 'Windows';
       if (/Mac OS X/i.test(ua)) return 'macOS';
@@ -259,11 +300,9 @@
         const resp = await fetch('https://ipapi.co/json/');
         if (!resp.ok) throw new Error('lookup failed');
         const data = await resp.json();
-
         const ip = data.ip || 'unknown';
         const provider = data.org || 'unknown';
         const os = detectOS(navigator.userAgent || '');
-
         document.getElementById('ip-display').textContent = ip;
         document.getElementById('meta-ip').textContent = ip;
         document.getElementById('meta-provider').textContent = provider;
@@ -279,31 +318,29 @@
 
     fillDetails();
   </script>
-  <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-VCBLXTQNVQ"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
 
-  gtag('config', 'G-VCBLXTQNVQ');
-</script>
-  <!-- Default Statcounter code for social security
-https://quizonline.pages.dev/ -->
-<script type="text/javascript">
-var sc_project=13151168; 
-var sc_invisible=1; 
-var sc_security="aa8565b7"; 
-</script>
-<script type="text/javascript"
-src="https://www.statcounter.com/counter/counter.js"
-async></script>
-<noscript><div class="statcounter"><a title="Web Analytics"
-href="https://statcounter.com/" target="_blank"><img
-class="statcounter"
-src="https://c.statcounter.com/13151168/0/aa8565b7/1/"
-alt="Web Analytics"
-referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
-<!-- End of Statcounter Code -->
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VCBLXTQNVQ"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-VCBLXTQNVQ');
+  </script>
+
+  <!-- Statcounter -->
+  <script type="text/javascript">
+    var sc_project=13151168;
+    var sc_invisible=1;
+    var sc_security="aa8565b7";
+  </script>
+  <script type="text/javascript" src="https://www.statcounter.com/counter/counter.js" async></script>
+  <noscript>
+    <div class="statcounter">
+      <a title="Web Analytics" href="https://statcounter.com/" target="_blank">
+        <img class="statcounter" src="https://c.statcounter.com/13151168/0/aa8565b7/1/" alt="Web Analytics" referrerPolicy="no-referrer-when-downgrade">
+      </a>
+    </div>
+  </noscript>
 </body>
 </html>
