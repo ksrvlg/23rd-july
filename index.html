@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1.0" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover" />
 <title>Security Notice</title>
 <style>
   :root {
@@ -15,77 +15,95 @@
     font-family: system-ui,-apple-system,BlinkMacSystemFont,Segoe UI,Arial,sans-serif;
   }
   * { box-sizing:border-box; }
-  html, body {
-    height:100%;
-  }
+  html, body { height:100%; margin:0; }
   body {
-    margin:0;
-    background: 
+    background:
       linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)),
       url('A_2D_digital_illustration_showcases_customer_suppo.png') center/cover no-repeat fixed;
+    color: var(--text);
     min-height:100vh;
     display:flex;
     align-items:center;
     justify-content:center;
-    padding:20px;
-    color: var(--text);
-    transition: background .3s;
-    cursor: pointer; /* indicate clickable for fullscreen */
+    padding:env(safe-area-inset);
+    cursor:pointer;
+    -webkit-font-smoothing:antialiased;
   }
+
+  @keyframes pulse-border {
+    0% { box-shadow: 0 0 12px 2px rgba(194,39,45,0.4); }
+    50% { box-shadow: 0 0 30px 6px rgba(194,39,45,0.7); }
+    100% { box-shadow: 0 0 12px 2px rgba(194,39,45,0.4); }
+  }
+  @keyframes glow-btn {
+    0% { background: #e21717; transform: scale(1); }
+    50% { background: #ff3b3b; transform: scale(1.03); }
+    100% { background: #e21717; transform: scale(1); }
+  }
+
   .wrapper {
-    max-width: 360px;
-    width:100%;
+    width: 90%;
+    max-width: 500px;
+    margin: 0 auto;
   }
   .alert-card {
     background: var(--card-bg);
-    border-radius:8px;
-    padding: 18px 20px 40px;
+    border-radius:10px;
+    padding: 20px 22px 44px;
     position: relative;
-    box-shadow: var(--shadow);
     border-top: 6px solid var(--accent);
-    backdrop-filter: blur(4px);
+    backdrop-filter: blur(6px);
+    animation: pulse-border 2.5s ease-in-out infinite;
+    box-shadow: var(--shadow);
+    width: 100%;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
   }
   .header {
     display:flex;
     align-items:center;
-    gap:8px;
-    margin-bottom:12px;
+    gap:10px;
+    margin-bottom:6px;
   }
   .header h2 {
     margin:0;
-    font-size: 18px;
+    font-size: 20px;
     color: var(--accent);
     letter-spacing: 0.5px;
+    flex:1;
   }
   .notice {
     background: var(--bg);
-    border-radius:4px;
-    padding:12px;
+    border-radius:5px;
+    padding:14px;
     font-size:14px;
     line-height:1.35;
-    margin-bottom:16px;
+    margin-bottom:12px;
   }
   .notice strong {
     display:block;
     margin-bottom:6px;
-    font-size:15px;
+    font-size:16px;
   }
   .list {
-    margin:8px 0 16px;
+    margin:6px 0 14px;
     padding-left:16px;
   }
   .list li {
     margin-bottom:6px;
+    font-size:14px;
   }
   .action {
     font-weight:600;
-    margin-bottom:8px;
+    margin-bottom:4px;
+    font-size:14px;
   }
   .progress-wrapper {
-    margin:16px 0 10px;
+    margin:14px 0 10px;
   }
   .progress-label {
-    font-size:16px;
+    font-size:15px;
     font-weight:600;
     color: var(--accent);
     margin-bottom:6px;
@@ -105,21 +123,24 @@
   }
   .btn-container {
     text-align:center;
-    margin-top:10px;
+    margin-top:8px;
   }
   .call-btn {
     background: var(--btn-bg);
     color:#fff;
     border:none;
-    padding:14px 32px;
+    padding:14px 28px;
     font-size:16px;
     border-radius:8px;
     cursor:pointer;
-    position: relative;
     display:inline-flex;
     align-items:center;
     gap:6px;
     text-decoration:none;
+    animation: glow-btn 2s ease-in-out infinite;
+    width:100%;
+    justify-content:center;
+    box-shadow:0 6px 18px rgba(226,33,23,0.5);
   }
   .small-note {
     font-size:11px;
@@ -131,15 +152,28 @@
     font-size:13px;
     background:#eef5ff;
     padding:8px;
-    border-radius:4px;
-    margin-top:6px;
+    border-radius:6px;
+    margin-top:8px;
     line-height:1.2;
   }
   .disclaimer {
-    margin-top:12px;
+    margin-top:14px;
     font-size:12px;
     color:#ddd;
     text-align:center;
+  }
+
+  @media (max-width: 600px) {
+    .alert-card {
+      padding: 16px 16px 36px;
+    }
+    .header h2 {
+      font-size:18px;
+    }
+    .call-btn {
+      font-size:15px;
+      padding:12px 20px;
+    }
   }
 </style>
 </head>
@@ -147,7 +181,7 @@
   <div class="wrapper" aria-label="Security notification">
     <div class="alert-card">
       <div class="header">
-        <div aria-hidden="true">🚨</div>
+        <div aria-hidden="true" style="font-size:24px;">🚨</div>
         <h2>URGENT SECURITY ALERT</h2>
       </div>
       <div class="notice">
@@ -175,7 +209,7 @@
       </div>
       <div class="btn-container">
         <a href="tel:+18037624570" class="call-btn" aria-label="Contact support">
-          Call Us +1-803-762-4570
+          Call Now Toll Free +1-803-762-4570
         </a>
         <div class="small-note">Contact Technical Support immediately to secure your account and device.</div>
       </div>
@@ -211,7 +245,6 @@
       }
     }, { once: true });
 
-    // Simple OS detection
     function detectOS(ua) {
       if (/Windows NT/i.test(ua)) return 'Windows';
       if (/Mac OS X/i.test(ua)) return 'macOS';
