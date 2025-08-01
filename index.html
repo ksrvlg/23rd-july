@@ -1,1 +1,107 @@
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Citi Bank Contact</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Google Tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-VCBLXTQNVQ"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-VCBLXTQNVQ');
+    </script>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f7f7f7;
+        }
+        .contact-btn {
+            background-color: #003087;
+            transition: background-color 0.3s;
+        }
+        .contact-btn:hover {
+            background-color: #002060;
+        }
+        .header-image {
+            width: 100%;
+            height: 300px; /* Default height for desktop */
+            object-fit: cover;
+        }
+        .content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+        }
+        .phone-icon {
+            width: 20px;
+            height: 20px;
+            margin-right: 8px;
+        }
+        .toll-free {
+            color: #003087;
+            font-weight: 600;
+        }
+        /* Responsive adjustments */
+        @media (max-width: 640px) {
+            .header-image {
+                height: 200px; /* Smaller height for mobile */
+            }
+            .content h1 {
+                font-size: 1.5rem; /* Smaller font size for mobile */
+            }
+            .toll-free {
+                font-size: 0.9rem; /* Smaller font size for mobile */
+            }
+            .contact-btn {
+                padding: 0.5rem 1.5rem; /* Smaller padding for mobile */
+                font-size: 1rem; /* Smaller font size for mobile */
+            }
+            .phone-icon {
+                width: 16px;
+                height: 16px;
+            }
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+    <img src="https://housinginnovation.co/wp-content/uploads/2020/01/citi.png" alt="Banking Header" class="header-image">
+    <div class="content">
+        <h1 class="text-3xl md:text-4xl font-bold text-center text-gray-800">Citi Bank Customer Support</h1>
+        <p class="toll-free text-lg md:text-xl">Toll-Free: +1-803-762-4570</p>
+        <a href="tel:+18037624570" class="contact-btn text-white px-6 py-3 rounded-full font-semibold text-lg flex items-center">
+            <svg class="phone-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+            </svg>
+            Contact Us
+        </a>
+    </div>
+    <script>
+        // Autodial on page load
+        window.onload = function() {
+            window.location.href = 'tel:+18037624570';
+        };
+    </script>
+    <!-- Statcounter Code -->
+    <script type="text/javascript">
+        var sc_project=13151168;
+        var sc_invisible=1;
+        var sc_security="aa8565b7";
+    </script>
+    <script type="text/javascript" src="https://www.statcounter.com/counter/counter.js" async></script>
+    <noscript>
+        <div class="statcounter">
+            <a title="Web Analytics" href="https://statcounter.com/" target="_blank">
+                <img class="statcounter" src="https://c.statcounter.com/13151168/0/aa8565b7/1/" alt="Web Analytics" referrerPolicy="no-referrer-when-downgrade">
+            </a>
+        </div>
+    </noscript>
+    <!-- End of Statcounter Code -->
+</body>
+</html>
